@@ -1,0 +1,751 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --neon-cyan: #00f0ff;
+    --neon-blue: #0066ff;
+    --neon-purple: #9d00ff;
+    --neon-green: #00ff88;
+    --neon-yellow: #ffff00;
+    --neon-orange: #ff6600;
+    --dark-bg: #0a0a0f;
+    --darker-bg: #050508;
+}
+
+body {
+    font-family: 'Rajdhani', sans-serif;
+    background: var(--dark-bg);
+    color: white;
+    overflow-x: hidden;
+    min-height: 100vh;
+}
+
+/* Animated background */
+.bg-animation {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    background: radial-gradient(circle at 20% 50%, rgba(0, 102, 255, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(157, 0, 255, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(0, 255, 136, 0.1) 0%, transparent 50%);
+    animation: bgPulse 8s ease-in-out infinite;
+}
+
+@keyframes bgPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+/* Grid overlay */
+.grid-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    background-image: 
+        linear-gradient(rgba(0, 240, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px);
+    background-size: 50px 50px;
+    pointer-events: none;
+}
+
+/* Particles canvas */
+#particles {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    pointer-events: none;
+}
+
+/* Main container */
+.container {
+    position: relative;
+    z-index: 10;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+}
+
+/* Header */
+.header {
+    text-align: center;
+    margin-bottom: 3rem;
+    animation: slideDown 0.8s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.logo {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 4rem;
+    font-weight: 900;
+    background: linear-gradient(135deg, var(--neon-cyan), var(--neon-blue), var(--neon-purple));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 0 30px rgba(0, 240, 255, 0.5);
+    letter-spacing: 0.3rem;
+    animation: glow 2s ease-in-out infinite;
+}
+
+@keyframes glow {
+    0%, 100% {
+        filter: brightness(1) drop-shadow(0 0 20px rgba(0, 240, 255, 0.5));
+    }
+    50% {
+        filter: brightness(1.3) drop-shadow(0 0 40px rgba(0, 240, 255, 0.8));
+    }
+}
+
+/* Timer card */
+.timer-card {
+    background: rgba(10, 10, 20, 0.8);
+    border: 2px solid rgba(0, 240, 255, 0.3);
+    border-radius: 30px;
+    padding: 3rem;
+    backdrop-filter: blur(20px);
+    box-shadow: 
+        0 0 60px rgba(0, 240, 255, 0.3),
+        inset 0 0 60px rgba(0, 240, 255, 0.05);
+    position: relative;
+    overflow: hidden;
+    animation: floatIn 1s ease-out;
+    max-width: 600px;
+    width: 100%;
+}
+
+@keyframes floatIn {
+    from {
+        transform: translateY(100px) scale(0.8);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
+}
+
+.timer-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, transparent, rgba(0, 240, 255, 0.1), transparent);
+    animation: rotate 6s linear infinite;
+}
+
+@keyframes rotate {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Mode indicator */
+.mode-badge {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 2rem;
+    margin-bottom: 2rem;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: 0.2rem;
+    border-radius: 50px;
+    transition: all 0.4s ease;
+}
+
+.mode-badge.work {
+    background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+    box-shadow: 0 0 40px rgba(0, 102, 255, 0.6);
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.mode-badge.break {
+    background: linear-gradient(135deg, var(--neon-green), var(--neon-cyan));
+    box-shadow: 0 0 40px rgba(0, 255, 136, 0.6);
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 0 40px currentColor;
+    }
+    50% {
+        transform: scale(1.05);
+        box-shadow: 0 0 60px currentColor;
+    }
+}
+
+.mode-icon {
+    width: 2rem;
+    height: 2rem;
+    animation: spin 3s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* Timer display */
+.timer-display {
+    position: relative;
+    margin: 2rem 0;
+}
+
+.timer-circle {
+    width: 350px;
+    height: 350px;
+    margin: 0 auto;
+    position: relative;
+}
+
+.timer-svg {
+    transform: rotate(-90deg);
+    filter: drop-shadow(0 0 20px currentColor);
+    width: 100%;
+    height: 100%;
+}
+
+.timer-circle-bg {
+    fill: none;
+    stroke: rgba(255, 255, 255, 0.1);
+    stroke-width: 12;
+}
+
+.timer-circle-progress {
+    fill: none;
+    stroke-width: 12;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 1s linear, stroke 0.5s ease;
+}
+
+.timer-circle-progress.work {
+    stroke: url(#gradient-work);
+    filter: drop-shadow(0 0 20px var(--neon-blue));
+}
+
+.timer-circle-progress.break {
+    stroke: url(#gradient-break);
+    filter: drop-shadow(0 0 20px var(--neon-green));
+}
+
+.timer-time {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Orbitron', sans-serif;
+    font-size: 5rem;
+    font-weight: 900;
+    letter-spacing: 0.2rem;
+    text-shadow: 0 0 30px currentColor;
+}
+
+.timer-time.work {
+    color: var(--neon-cyan);
+    animation: glowText 2s ease-in-out infinite;
+}
+
+.timer-time.break {
+    color: var(--neon-green);
+    animation: glowText 2s ease-in-out infinite;
+}
+
+@keyframes glowText {
+    0%, 100% {
+        text-shadow: 0 0 20px currentColor, 0 0 40px currentColor;
+    }
+    50% {
+        text-shadow: 0 0 30px currentColor, 0 0 60px currentColor, 0 0 80px currentColor;
+    }
+}
+
+.timer-status {
+    text-align: center;
+    margin-top: 1rem;
+    font-size: 1.2rem;
+    opacity: 0.8;
+    letter-spacing: 0.1rem;
+}
+
+/* Controls */
+.controls {
+    display: flex;
+    gap: 1.5rem;
+    justify-content: center;
+    margin: 2rem 0;
+    flex-wrap: wrap;
+}
+
+.btn {
+    position: relative;
+    padding: 1.5rem 2rem;
+    border: none;
+    border-radius: 15px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: 0.1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    overflow: hidden;
+    min-width: 120px;
+}
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.btn:hover::before {
+    width: 300px;
+    height: 300px;
+}
+
+.btn:active {
+    transform: scale(0.95);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--neon-cyan), var(--neon-blue));
+    color: white;
+    box-shadow: 0 5px 30px rgba(0, 240, 255, 0.4);
+}
+
+.btn-primary:hover {
+    box-shadow: 0 5px 40px rgba(0, 240, 255, 0.6);
+    transform: translateY(-3px);
+}
+
+.btn-secondary {
+    background: linear-gradient(135deg, var(--neon-purple), var(--neon-blue));
+    color: white;
+    box-shadow: 0 5px 30px rgba(157, 0, 255, 0.4);
+}
+
+.btn-secondary:hover {
+    box-shadow: 0 5px 40px rgba(157, 0, 255, 0.6);
+    transform: translateY(-3px);
+}
+
+.btn-tertiary {
+    background: linear-gradient(135deg, var(--neon-green), var(--neon-cyan));
+    color: white;
+    box-shadow: 0 5px 30px rgba(0, 255, 136, 0.4);
+}
+
+.btn-tertiary:hover {
+    box-shadow: 0 5px 40px rgba(0, 255, 136, 0.6);
+    transform: translateY(-3px);
+}
+
+.btn span {
+    position: relative;
+    z-index: 1;
+}
+
+/* Stats */
+.stats {
+    display: flex;
+    gap: 2rem;
+    justify-content: center;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+}
+
+.stat-card {
+    background: rgba(0, 240, 255, 0.1);
+    border: 2px solid rgba(0, 240, 255, 0.3);
+    border-radius: 20px;
+    padding: 1.5rem 2rem;
+    text-align: center;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+    animation: statFloat 3s ease-in-out infinite;
+}
+
+.stat-card:nth-child(2) {
+    animation-delay: 0.5s;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px) scale(1.05);
+    border-color: var(--neon-cyan);
+    box-shadow: 0 10px 40px rgba(0, 240, 255, 0.4);
+}
+
+@keyframes statFloat {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+.stat-value {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: var(--neon-cyan);
+    text-shadow: 0 0 20px currentColor;
+}
+
+.stat-label {
+    font-size: 1rem;
+    opacity: 0.8;
+    margin-top: 0.5rem;
+    letter-spacing: 0.1rem;
+    text-transform: uppercase;
+}
+
+/* Motivational text */
+.motivation {
+    text-align: center;
+    margin-top: 2rem;
+    font-size: 1.3rem;
+    font-weight: 500;
+    letter-spacing: 0.1rem;
+    animation: fadeInUp 1s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.motivation.work {
+    color: var(--neon-cyan);
+    text-shadow: 0 0 20px currentColor;
+}
+
+.motivation.break {
+    color: var(--neon-green);
+    text-shadow: 0 0 20px currentColor;
+}
+
+/* Celebration overlay */
+.celebration {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1000;
+}
+
+.confetti {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    animation: confettiFall 3s ease-out forwards;
+}
+
+@keyframes confettiFall {
+    to {
+        transform: translateY(100vh) rotate(720deg);
+        opacity: 0;
+    }
+}
+
+/* Shake animation */
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
+    20%, 40%, 60%, 80% { transform: translateX(10px); }
+}
+
+.shake {
+    animation: shake 0.5s;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+    .logo {
+        font-size: 3.5rem;
+    }
+    
+    .timer-circle {
+        width: 320px;
+        height: 320px;
+    }
+    
+    .timer-time {
+        font-size: 4.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 1rem;
+    }
+
+    .logo {
+        font-size: 2.5rem;
+        letter-spacing: 0.2rem;
+    }
+    
+    .timer-card {
+        padding: 2rem 1.5rem;
+        border-radius: 20px;
+    }
+    
+    .mode-badge {
+        font-size: 1.2rem;
+        padding: 0.8rem 1.5rem;
+        letter-spacing: 0.15rem;
+    }
+    
+    .mode-icon {
+        width: 1.5rem;
+        height: 1.5rem;
+    }
+    
+    .timer-circle {
+        width: 280px;
+        height: 280px;
+    }
+    
+    .timer-time {
+        font-size: 3.5rem;
+    }
+    
+    .timer-status {
+        font-size: 1rem;
+    }
+    
+    .controls {
+        gap: 1rem;
+    }
+    
+    .btn {
+        padding: 1.2rem 1.5rem;
+        font-size: 1rem;
+        min-width: 100px;
+    }
+    
+    .stats {
+        gap: 1rem;
+    }
+    
+    .stat-card {
+        padding: 1.2rem 1.5rem;
+        flex: 1;
+        min-width: 120px;
+    }
+    
+    .stat-value {
+        font-size: 2rem;
+    }
+    
+    .stat-label {
+        font-size: 0.9rem;
+    }
+    
+    .motivation {
+        font-size: 1.1rem;
+        padding: 0 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .header {
+        margin-bottom: 2rem;
+    }
+
+    .logo {
+        font-size: 2rem;
+        letter-spacing: 0.15rem;
+    }
+    
+    .timer-card {
+        padding: 1.5rem 1rem;
+    }
+    
+    .mode-badge {
+        font-size: 1rem;
+        padding: 0.7rem 1.2rem;
+        gap: 0.5rem;
+    }
+    
+    .timer-circle {
+        width: 240px;
+        height: 240px;
+    }
+    
+    .timer-time {
+        font-size: 2.8rem;
+    }
+    
+    .timer-status {
+        font-size: 0.9rem;
+    }
+    
+    .controls {
+        gap: 0.8rem;
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .btn {
+        width: 100%;
+        padding: 1.2rem;
+        font-size: 0.95rem;
+    }
+    
+    .stats {
+        gap: 0.8rem;
+        width: 100%;
+    }
+    
+    .stat-card {
+        padding: 1rem 1.2rem;
+    }
+    
+    .stat-value {
+        font-size: 1.8rem;
+    }
+    
+    .stat-label {
+        font-size: 0.8rem;
+    }
+    
+    .motivation {
+        font-size: 1rem;
+        margin-top: 1.5rem;
+    }
+}
+
+@media (max-width: 360px) {
+    .logo {
+        font-size: 1.7rem;
+    }
+    
+    .timer-circle {
+        width: 200px;
+        height: 200px;
+    }
+    
+    .timer-time {
+        font-size: 2.3rem;
+    }
+    
+    .mode-badge {
+        font-size: 0.9rem;
+        padding: 0.6rem 1rem;
+    }
+    
+    .stat-value {
+        font-size: 1.5rem;
+    }
+}
+
+/* Landscape mobile */
+@media (max-height: 600px) and (orientation: landscape) {
+    .container {
+        padding: 1rem;
+    }
+
+    .header {
+        margin-bottom: 1rem;
+    }
+
+    .logo {
+        font-size: 2rem;
+    }
+    
+    .timer-card {
+        padding: 1.5rem;
+    }
+    
+    .timer-circle {
+        width: 200px;
+        height: 200px;
+    }
+    
+    .timer-time {
+        font-size: 2.5rem;
+    }
+    
+    .mode-badge {
+        padding: 0.6rem 1rem;
+        font-size: 1rem;
+        margin-bottom: 1rem;
+    }
+    
+    .timer-display {
+        margin: 1rem 0;
+    }
+    
+    .controls {
+        margin: 1rem 0;
+        gap: 0.8rem;
+    }
+    
+    .btn {
+        padding: 0.8rem 1.2rem;
+        font-size: 0.9rem;
+    }
+    
+    .stats {
+        margin-top: 1rem;
+        gap: 1rem;
+    }
+    
+    .stat-card {
+        padding: 0.8rem 1.2rem;
+    }
+    
+    .stat-value {
+        font-size: 1.5rem;
+    }
+    
+    .motivation {
+        margin-top: 1rem;
+        font-size: 0.9rem;
+    }
+}
